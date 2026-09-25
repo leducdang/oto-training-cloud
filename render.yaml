@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: oto-training-cloud
+    runtime: python
+    plan: free
+    buildCommand: pip install --upgrade pip && pip install -r requirements-render.txt
+    startCommand: gunicorn cloud_server:app --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 60
+    healthCheckPath: /api/health
+    envVars:
+      - key: CLOUD_API_TOKEN
+        sync: false
+      - key: INITIAL_ADMIN_PASSWORD
+        sync: false
+      - key: INITIAL_ADMIN_USERNAME
+        value: admin
+      - key: CLOUD_SESSION_HOURS
+        value: "12"
+      - key: CLOUD_PUBLIC_DASHBOARD
+        value: "false"
